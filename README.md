@@ -14,5 +14,5 @@ uji awal dari setiap anggota:
 
 Dokumen tiap anggota tersedia di folder `team_progress/`.
 
-Ghazi telah melanjutkan ke Step 3, yaitu pengembangan inventory dan pemuatan
-aset UI setelah implementasi dasar audio dan dependency proyek.
+Ghazi telah melanjutkan ke Step 4, yaitu integrasi launcher, audio, inventory,
+aset UI, konfigurasi permainan, dan testing.
