@@ -1,14 +1,11 @@
-# Team Progress - Step 1
+# Team Progress
 
-Status saat ini: `01_perencanaan`
-
-| Anggota | Dokumen |
-| --- | --- |
-| Fatir Zaidan | `fatir_zaidan/01_perencanaan/PROGRESS.md` |
-| Ghazi | `ghazi/01_perencanaan/PROGRESS.md` |
-| Kala | `kala/01_perencanaan/PROGRESS.md` |
-| Rafa Rabbani | `rafa_rabbani/01_perencanaan/PROGRESS.md` |
+| Anggota | Tahap Saat Ini | Dokumen |
+| --- | --- | --- |
+| Fatir Zaidan | `01_perencanaan` | `fatir_zaidan/01_perencanaan/PROGRESS.md` |
+| Ghazi | `02_implementasi_dasar` | `ghazi/02_implementasi_dasar/PROGRESS.md` |
+| Kala | `01_perencanaan` | `kala/01_perencanaan/PROGRESS.md` |
+| Rafa Rabbani | `01_perencanaan` | `rafa_rabbani/01_perencanaan/PROGRESS.md` |
 
 Tahap berikutnya akan ditambahkan melalui commit terpisah agar riwayat
 perkembangan proyek dapat dibaca secara berurutan.
-

@@ -2,10 +2,10 @@
 
 Repository ini menampilkan perkembangan proyek secara bertahap.
 
-## Step 1 - Perencanaan
+## Progress Saat Ini
 
-Tahap pertama berisi ruang lingkup, pembagian modul, target, dan skenario uji
-awal dari setiap anggota:
+Tahap perencanaan berisi ruang lingkup, pembagian modul, target, dan skenario
+uji awal dari setiap anggota:
 
 - Fatir Zaidan: gameplay Mario, campaign, quest, checkpoint, dan integrasi.
 - Ghazi: launcher Tkinter, audio, inventory, UI assets, dan dependency.
@@ -14,3 +14,5 @@ awal dari setiap anggota:
 
 Dokumen tiap anggota tersedia di folder `team_progress/`.
 
+Ghazi telah melanjutkan ke Step 2, yaitu implementasi dasar audio dan
+penyiapan dependency proyek.
