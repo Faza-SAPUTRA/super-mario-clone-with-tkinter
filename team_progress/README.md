@@ -3,7 +3,7 @@
 | Anggota | Tahap Saat Ini | Dokumen |
 | --- | --- | --- |
 | Fatir Zaidan | `01_perencanaan` | `fatir_zaidan/01_perencanaan/PROGRESS.md` |
-| Ghazi | `04_integrasi_testing` | `ghazi/04_integrasi_testing/PROGRESS.md` |
+| Ghazi | `05_final` | `ghazi/05_final/PROGRESS.md` |
 | Kala | `01_perencanaan` | `kala/01_perencanaan/PROGRESS.md` |
 | Rafa Rabbani | `01_perencanaan` | `rafa_rabbani/01_perencanaan/PROGRESS.md` |
 

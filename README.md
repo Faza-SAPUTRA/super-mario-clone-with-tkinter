@@ -14,5 +14,5 @@ uji awal dari setiap anggota:
 
 Dokumen tiap anggota tersedia di folder `team_progress/`.
 
-Ghazi telah melanjutkan ke Step 4, yaitu integrasi launcher, audio, inventory,
-aset UI, konfigurasi permainan, dan testing.
+Ghazi telah menyelesaikan Step 5. Paket finalnya mencakup launcher, audio,
+inventory, pemuatan aset UI, dependency, konfigurasi permainan, dan testing.
