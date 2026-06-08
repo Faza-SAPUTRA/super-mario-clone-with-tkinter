@@ -4,7 +4,7 @@
 | --- | --- | --- |
 | Fatir Zaidan | `01_perencanaan` | `fatir_zaidan/01_perencanaan/PROGRESS.md` |
 | Ghazi | `05_final` | `ghazi/05_final/PROGRESS.md` |
-| Kala | `04_integrasi_testing` | `kala/04_integrasi_testing/PROGRESS.md` |
+| Kala | `05_final` | `kala/05_final/PROGRESS.md` |
 | Rafa Rabbani | `01_perencanaan` | `rafa_rabbani/01_perencanaan/PROGRESS.md` |
 
 Tahap berikutnya akan ditambahkan melalui commit terpisah agar riwayat

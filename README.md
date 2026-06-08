@@ -16,3 +16,6 @@ Dokumen tiap anggota tersedia di folder `team_progress/`.
 
 Ghazi telah menyelesaikan Step 5. Paket finalnya mencakup launcher, audio,
 inventory, pemuatan aset UI, dependency, konfigurasi permainan, dan testing.
+
+Kala telah menyelesaikan Step 5. Paket finalnya mencakup engine level, tiga map
+campaign, title screen, balancing, dan testing level.
