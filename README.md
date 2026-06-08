@@ -14,5 +14,5 @@ uji awal dari setiap anggota:
 
 Dokumen tiap anggota tersedia di folder `team_progress/`.
 
-Ghazi telah melanjutkan ke Step 2, yaitu implementasi dasar audio dan
-penyiapan dependency proyek.
+Ghazi telah melanjutkan ke Step 3, yaitu pengembangan inventory dan pemuatan
+aset UI setelah implementasi dasar audio dan dependency proyek.
