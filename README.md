@@ -22,3 +22,6 @@ campaign, title screen, balancing, dan testing level.
 
 Rafa Rabbani telah menyelesaikan Step 5. Paket finalnya mencakup helper shop,
 aset visual, screenshot aplikasi, dokumentasi, dan bahan presentasi.
+
+Fatir Zaidan telah menyelesaikan Step 5. Paket finalnya mencakup gameplay
+Mario, campaign, quest, checkpoint, dan integrasi utama game loop.
