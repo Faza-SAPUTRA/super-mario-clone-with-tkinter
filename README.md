@@ -19,3 +19,6 @@ inventory, pemuatan aset UI, dependency, konfigurasi permainan, dan testing.
 
 Kala telah menyelesaikan Step 5. Paket finalnya mencakup engine level, tiga map
 campaign, title screen, balancing, dan testing level.
+
+Rafa Rabbani telah menyelesaikan Step 5. Paket finalnya mencakup helper shop,
+aset visual, screenshot aplikasi, dokumentasi, dan bahan presentasi.
