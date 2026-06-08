@@ -1,27 +1,45 @@
 # Super Mario Clone with Tkinter
 
-Repository ini menampilkan perkembangan proyek secara bertahap.
+Game Super Mario berbasis Python, pygame, dan Tkinter launcher.
 
-## Progress Saat Ini
+## Running
 
-Tahap perencanaan berisi ruang lingkup, pembagian modul, target, dan skenario
-uji awal dari setiap anggota:
+```powershell
+pip install -r requirements.txt
+python main.py
+```
 
-- Fatir Zaidan: gameplay Mario, campaign, quest, checkpoint, dan integrasi.
-- Ghazi: launcher Tkinter, audio, inventory, UI assets, dan dependency.
-- Kala: engine level, desain map, balancing, dan testing level.
-- Rafa Rabbani: helper shop, aset visual, dokumentasi, dan presentasi.
+Game dimulai dari Tkinter launcher. Dari launcher, pemain dapat memilih level,
+mengatur volume, mengaktifkan fullscreen, atau membaca panduan kontrol sebelum
+jendela pygame dibuka.
 
-Dokumen tiap anggota tersedia di folder `team_progress/`.
+## Controls
 
-Ghazi telah menyelesaikan Step 5. Paket finalnya mencakup launcher, audio,
-inventory, pemuatan aset UI, dependency, konfigurasi permainan, dan testing.
+- Left: Move left
+- Right: Move right
+- Space: Jump
+- Shift: Boost
+- B: Open helper shop
+- Down: Enter a configured green warp pipe while standing on top of it
+- Left/Right Mouseclick: secret
 
-Kala telah menyelesaikan Step 5. Paket finalnya mencakup engine level, tiga map
-campaign, title screen, balancing, dan testing level.
+## Progress Tim
 
-Rafa Rabbani telah menyelesaikan Step 5. Paket finalnya mencakup helper shop,
-aset visual, screenshot aplikasi, dokumentasi, dan bahan presentasi.
+Progress per anggota tersedia di folder `team_progress/`. Setiap anggota
+memiliki milestone dari perencanaan, implementasi dasar, pengembangan fitur,
+integrasi dan testing, sampai hasil final.
 
-Fatir Zaidan telah menyelesaikan Step 5. Paket finalnya mencakup gameplay
-Mario, campaign, quest, checkpoint, dan integrasi utama game loop.
+| Anggota | Status |
+| --- | --- |
+| Fatir Zaidan | `05_final` |
+| Ghazi | `05_final` |
+| Kala | `05_final` |
+| Rafa Rabbani | `05_final` |
+
+## Dependencies
+
+- pygame
+- scipy
+- tkinter
+- customtkinter
+- pillow

@@ -1,0 +1,4 @@
+pygame>=2.6,<3
+scipy>=1.13,<2
+customtkinter>=5.2,<6
+pillow>=10,<12
