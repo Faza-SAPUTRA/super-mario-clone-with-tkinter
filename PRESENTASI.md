@@ -1,8 +1,8 @@
 # Alur Presentasi Super Mario
 
 Urutan ini mengikuti alur program saat game dijalankan, bukan urutan nama
-anggota. Target demo adalah menyelesaikan campaign dari World 1-1 sampai
-World 1-3.
+anggota. Campaign sekarang berjalan dari World 1-1 sampai World 3-1 dengan
+total delapan level.
 
 ## 1. Ghazi - Launcher dan Persiapan Game
 
@@ -50,6 +50,11 @@ File utama:
 - `levels/Level1-1.json`
 - `levels/Level1-2.json`
 - `levels/Level1-3.json`
+- `levels/Level1-4.json`
+- `levels/Level2-1.json`
+- `levels/Level2-2.json`
+- `levels/Level2-3.json`
+- `levels/Level3-1.json`
 
 Alur yang dijelaskan:
 
@@ -63,9 +68,9 @@ Alur yang dijelaskan:
 
 Data akhir campaign:
 
-- World 1-1: panjang 60, flag `[57, 13]`.
-- World 1-2: panjang 60, flag `[57, 13]`.
-- World 1-3: panjang 70, flag `[67, 13]`.
+- World 1 terdiri dari empat level pengenalan dan canyon.
+- World 2 terdiri dari coin ridge, pipe maze, dan shell run.
+- World 3-1 adalah final gauntlet sepanjang 96 tile.
 
 Transisi:
 
@@ -88,13 +93,13 @@ File utama:
 
 Alur yang dijelaskan:
 
-1. `playCampaign()` membuat urutan World 1-1, 1-2, lalu 1-3.
+1. `playCampaign()` menjalankan delapan level dari World 1-1 sampai World 3-1.
 2. `Mario.update()` menjalankan gerak, gravitasi, collision, input, dan flag.
 3. `checkFinishFlag()` mengubah `levelCompleted` menjadi `True`.
-4. World 1-1 dan 1-2 menampilkan `LEVEL COMPLETE`, lalu memuat world berikutnya.
+4. Setiap flag selain flag terakhir menampilkan `LEVEL COMPLETE`.
 5. `prepareNextLevel()` mereset posisi dan state map, tetapi mempertahankan
    coin, inventory, power-up, dan progres quest.
-6. Setelah flag World 1-3, `Campaign.goToNextLevel()` mengembalikan `False`.
+6. Setelah flag World 3-1, `Campaign.goToNextLevel()` mengembalikan `False`.
 7. Game menampilkan `CAMPAIGN COMPLETE`, final score, dan kembali ke launcher
    setelah Enter ditekan.
 
@@ -142,18 +147,18 @@ Bagian demo:
 - Beli atau gunakan Super Jump jika coin cukup.
 - Tutup shop dan lanjutkan permainan.
 
-## 5. Penutup Bersama - World 1-3 Sampai Tamat
+## 5. Penutup Bersama - World 3-1 Sampai Tamat
 
-Operator game melanjutkan sampai flag World 1-3.
+Operator game melanjutkan sampai flag World 3-1.
 
 Yang harus terlihat:
 
-1. Flag terakhir berada dekat ujung map pada x = 67.
+1. Flag terakhir berada dekat ujung map pada x = 93.
 2. Menyentuh area tiang mengaktifkan `levelCompleted`.
 3. Tidak ada world berikutnya.
 4. Layar menampilkan:
    - `CAMPAIGN COMPLETE`
-   - `YOU CLEARED ALL 3 WORLDS`
+   - `ALL 8 LEVELS COMPLETE`
    - final score
    - `PRESS ENTER FOR LAUNCHER`
 5. Tekan Enter untuk membuktikan alur kembali ke launcher.
@@ -161,5 +166,5 @@ Yang harus terlihat:
 Kalimat penutup:
 
 "Game ini menggabungkan launcher Tkinter, runtime Pygame, level berbasis JSON,
-campaign tiga world, serta companion shop. Campaign dinyatakan tamat setelah
-Mario menyentuh flag di World 1-3."
+delapan level campaign, serta companion shop. Campaign dinyatakan tamat setelah
+Mario menyentuh flag di World 3-1."

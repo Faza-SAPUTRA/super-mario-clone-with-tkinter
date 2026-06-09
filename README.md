@@ -11,7 +11,19 @@ python main.py
 
 Game dimulai dari Tkinter launcher. Dari launcher, pemain dapat memilih level,
 mengatur volume, mengaktifkan fullscreen, atau membaca panduan kontrol sebelum
-jendela pygame dibuka.
+jendela pygame dibuka. Campaign memiliki delapan level dalam tiga world.
+Menyentuh flag akan memuat level berikutnya dan flag World 3-1 menyelesaikan
+campaign.
+
+Tekan `B` untuk membuka helper shop. Mode windowed memakai jendela Tkinter,
+sedangkan mode fullscreen memakai overlay langsung di dalam Pygame.
+
+## Build Windows
+
+```powershell
+pip install py2exe
+python compile.py py2exe
+```
 
 ## Controls
 

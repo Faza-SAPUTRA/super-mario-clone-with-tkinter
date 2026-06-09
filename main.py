@@ -68,7 +68,7 @@ def playCampaign(screen, dashboard, sound, level):
                 loadLevel(campaign.getCurrentLevel(), dashboard, level)
                 mario.prepareNextLevel()
             else:
-                showCampaignCompleted(screen, dashboard)
+                showCampaignCompleted(screen, dashboard, len(campaign.levelNames))
                 return
 
         pygame.display.update()
@@ -93,13 +93,14 @@ def showLevelCompleted(screen, dashboard, nextLevel):
         clock.tick(maxFrameRate)
 
 
-def showCampaignCompleted(screen, dashboard):
+def showCampaignCompleted(screen, dashboard, levelCount):
     clock = pygame.time.Clock()
+    completedText = "ALL " + str(levelCount) + " LEVELS COMPLETE"
 
     while True:
         screen.fill((92, 148, 252))
         dashboard.drawText("CAMPAIGN COMPLETE", 105, 135, 24)
-        dashboard.drawText("YOU CLEARED ALL 3 WORLDS", 80, 195, 20)
+        dashboard.drawText(completedText, 80, 195, 20)
         dashboard.drawText("FINAL SCORE " + dashboard.pointString(), 160, 245, 18)
         dashboard.drawText("PRESS ENTER FOR LAUNCHER", 95, 300, 18)
         pygame.display.update()

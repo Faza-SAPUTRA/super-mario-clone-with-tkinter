@@ -3,6 +3,7 @@ import tkinter as tk
 
 import customtkinter as ctk
 
+from classes.Campaign import Campaign
 from classes.UiAssets import UiAssets
 
 
@@ -37,11 +38,7 @@ class Launcher:
         self.selectLevel(self.selectedLevel.get())
 
     def loadLevelNames(self):
-        return [
-            "Level1-1",
-            "Level1-2",
-            "Level1-3",
-        ]
+        return list(Campaign.LEVEL_NAMES)
 
     def loadSettings(self):
         defaultLevel = self.levelNames[0]
@@ -267,7 +264,7 @@ class Launcher:
             + "ENEMIES   "
             + str(levelInfo["enemies"])
             + "\n\n"
-            + "Reach the red flag to continue. The third flag wins the campaign."
+            + "Reach each red flag. The final world completes the campaign."
         )
         self.levelInfo.configure(text=text)
 
