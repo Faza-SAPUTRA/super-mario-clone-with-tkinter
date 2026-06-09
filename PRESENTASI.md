@@ -6,6 +6,10 @@ World 1-3.
 
 ## 1. Ghazi - Launcher dan Persiapan Game
 
+Folder kontribusi:
+
+- `team_progress/ghazi/05_final/source/`
+
 File utama:
 
 - `classes/Launcher.py`
@@ -35,9 +39,14 @@ map diubah menjadi level yang bisa dimainkan."
 
 ## 2. Kala - Engine dan Desain Level
 
+Folder kontribusi:
+
+- `team_progress/kala/05_final/source/`
+
 File utama:
 
 - `classes/Level.py`
+- `classes/Camera.py`
 - `levels/Level1-1.json`
 - `levels/Level1-2.json`
 - `levels/Level1-3.json`
@@ -49,7 +58,8 @@ Alur yang dijelaskan:
 3. `loadObjects()` memasang bush, cloud, pipe, warp pipe, dan flag.
 4. `loadEntities()` memasang coin, box, Goomba, Koopa, dan power-up.
 5. `drawLevel()` hanya menggambar bagian map yang terlihat oleh kamera.
-6. Setiap world memiliki flag sebagai tujuan akhir.
+6. `Camera.move()` mengikuti Mario dan berpindah langsung saat memakai warp pipe.
+7. Setiap world memiliki flag sebagai tujuan akhir.
 
 Data akhir campaign:
 
@@ -63,6 +73,10 @@ Transisi:
 berinteraksi, dan mengubah flag menjadi progres campaign."
 
 ## 3. Fatir Zaidan - Gameplay dan Campaign
+
+Folder kontribusi:
+
+- `team_progress/fatir_zaidan/05_final/source/`
 
 File utama:
 
@@ -97,9 +111,14 @@ menunjukkan shop, inventory, dan quest yang berjalan di tengah level."
 
 ## 4. Rafa Rabbani - Shop dan UI Pendukung
 
+Folder kontribusi:
+
+- `team_progress/rafa_rabbani/05_final/source/`
+
 File utama:
 
 - `classes/Shop.py`
+- `classes/PygameShop.py`
 - `README.md`
 - `img/characters.gif`
 - `img/Items.png`
@@ -108,11 +127,13 @@ File utama:
 Alur yang dijelaskan:
 
 1. Tombol `B` memanggil `Mario.openShop()`.
-2. Tab Shop menukar coin dengan Mushroom, Shield, Super Jump, Enemy Cleaner,
+2. Mode windowed memakai `Shop.py`, sedangkan fullscreen memakai
+   `PygameShop.py` sebagai overlay dalam layar game yang sama.
+3. Tab Shop menukar coin dengan Mushroom, Shield, Super Jump, Enemy Cleaner,
    atau checkpoint.
-3. Tab Inventory menyimpan dan mengaktifkan item.
-4. Tab Quests menampilkan progres coin, musuh, dan pembelian.
-5. Tombol `CONTINUE LEVEL` menutup companion window dan kembali ke game.
+4. Tab Inventory menyimpan dan mengaktifkan item.
+5. Tab Quests menampilkan progres coin, musuh, dan pembelian.
+6. Tombol `CONTINUE LEVEL` atau tombol `B` menutup shop dan kembali ke game.
 
 Bagian demo:
 

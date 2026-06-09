@@ -15,6 +15,7 @@ from traits.bounce import bounceTrait
 from traits.go import GoTrait
 from traits.jump import JumpTrait
 from classes.Pause import Pause
+from classes.PygameShop import PygameShop
 from classes.Shop import Shop
 
 spriteCollection = Sprites().spriteCollection
@@ -119,7 +120,10 @@ class Mario(EntityBase):
         self.vel.y = 0
 
     def openShop(self):
-        Shop(self).open()
+        if self.screen.get_flags() & pygame.FULLSCREEN:
+            PygameShop(self).open()
+        else:
+            Shop(self).open()
 
     def spendCoins(self, price):
         if self.dashboard.coins < price:
