@@ -98,9 +98,10 @@ def showCampaignCompleted(screen, dashboard):
 
     while True:
         screen.fill((92, 148, 252))
-        dashboard.drawText("YOU WIN", 220, 155, 34)
-        dashboard.drawText("ALL 3 LEVELS COMPLETE", 105, 220, 20)
-        dashboard.drawText("PRESS ENTER", 190, 280, 18)
+        dashboard.drawText("CAMPAIGN COMPLETE", 105, 135, 24)
+        dashboard.drawText("YOU CLEARED ALL 3 WORLDS", 80, 195, 20)
+        dashboard.drawText("FINAL SCORE " + dashboard.pointString(), 160, 245, 18)
+        dashboard.drawText("PRESS ENTER FOR LAUNCHER", 95, 300, 18)
         pygame.display.update()
 
         for event in pygame.event.get():

@@ -6,369 +6,626 @@ from classes.UiAssets import UiAssets
 
 
 class Shop:
-    """Mario-themed companion panel for buying items, inventory, and quests."""
+    """Pixel-art companion panel for buying items, inventory, and quests."""
+
+    BG = "#111827"
+    PANEL = "#1F2937"
+    PANEL_ALT = "#273449"
+    BORDER = "#4B5563"
+    TEXT = "#F9FAFB"
+    MUTED = "#9CA3AF"
+    RED = "#DC2626"
+    RED_HOVER = "#B91C1C"
+    YELLOW = "#FACC15"
+    GREEN = "#16A34A"
+    GREEN_HOVER = "#15803D"
+    DISABLED = "#374151"
+    FONT = "Consolas"
 
     def __init__(self, mario):
         self.mario = mario
         self.assets = UiAssets()
+        self.activeSection = "SHOP"
+        self.inventoryLabels = {}
+        self.inventoryButtons = {}
+        self.questLabels = {}
+        self.questBars = {}
+        self.buyButtons = {}
+        self.navButtons = {}
+        self.sections = {}
+
+        self.items = [
+            {
+                "name": "Mushroom",
+                "title": "MUSHROOM",
+                "description": "Grow before the next hit.",
+                "price": 5,
+                "color": "#DC2626",
+                "command": self.mario.buyMushroom,
+            },
+            {
+                "name": "Star Shield",
+                "title": "STAR SHIELD",
+                "description": "Ten seconds of enemy immunity.",
+                "price": 8,
+                "color": "#2563EB",
+                "command": self.mario.buyShield,
+            },
+            {
+                "name": "Super Jump",
+                "title": "SUPER JUMP",
+                "description": "Instant emergency vertical boost.",
+                "price": 3,
+                "color": "#16A34A",
+                "command": self.mario.buySuperJump,
+            },
+            {
+                "name": "Enemy Cleaner",
+                "title": "ENEMY CLEANER",
+                "description": "Clear nearby enemies in one tap.",
+                "price": 10,
+                "color": "#7C3AED",
+                "command": self.mario.buyEnemyCleaner,
+            },
+        ]
 
         ctk.set_appearance_mode("dark")
-
         self.window = ctk.CTk()
-        self.window.title("Toad House Companion")
-        self.window.geometry("860x650")
+        self.window.title("Toad House - Pixel Supply Shop")
+        windowWidth = 960
+        windowHeight = 680
+        screenWidth = self.window.winfo_screenwidth()
+        screenHeight = self.window.winfo_screenheight()
+        windowX = max(0, (screenWidth - windowWidth) // 2)
+        windowY = max(0, (screenHeight - windowHeight) // 2)
+        self.window.geometry(
+            str(windowWidth)
+            + "x"
+            + str(windowHeight)
+            + "+"
+            + str(windowX)
+            + "+"
+            + str(windowY)
+        )
         self.window.resizable(False, False)
         self.window.protocol("WM_DELETE_WINDOW", self.closeShop)
+        self.window.bind("<Escape>", self.closeShop)
+        self.window.bind("<Key-b>", self.closeShop)
+        self.window.bind("<Key-B>", self.closeShop)
+        self.window.bind("<Key-1>", lambda event: self.showSection("SHOP"))
+        self.window.bind("<Key-2>", lambda event: self.showSection("BAG"))
+        self.window.bind("<Key-3>", lambda event: self.showSection("QUESTS"))
 
         self.coinText = tk.StringVar(self.window)
         self.checkpointText = tk.StringVar(self.window)
-        self.statusText = tk.StringVar(
-            self.window,
-            value=self.getOpeningMessage(),
-        )
-
-        self.inventoryLabels = {}
-        self.questLabels = {}
+        self.statusText = tk.StringVar(self.window, value=self.getOpeningMessage())
 
         self.drawShop()
+        self.showSection("SHOP")
         self.refresh()
+        self.window.after(100, self.window.focus_force)
 
     def getOpeningMessage(self):
-        if self.mario.shopMessage != "":
+        if self.mario.shopMessage:
             message = self.mario.shopMessage
             self.mario.shopMessage = ""
             return message
+        return "Toad says: pick a tool, prepare your bag, and keep moving!"
 
-        return "Welcome! Buy supplies, prepare your bag, then continue the level."
+    def pixelLabel(self, parent, **kwargs):
+        kwargs.setdefault("font", (self.FONT, 12, "bold"))
+        return ctk.CTkLabel(parent, **kwargs)
 
     def drawShop(self):
-        self.window.configure(fg_color="#5C94FC")
+        backdrop = ctk.CTkLabel(self.window, text="", image=self.assets.shopBackdrop)
+        backdrop.place(x=0, y=0, relwidth=1, relheight=1)
 
-        header = ctk.CTkFrame(
+        shell = ctk.CTkFrame(
             self.window,
-            height=112,
+            width=900,
+            height=622,
             corner_radius=0,
-            fg_color="#E52521",
+            fg_color=self.BG,
+            border_width=4,
+            border_color="#6B4423",
         )
-        header.pack(fill="x")
-        header.pack_propagate(False)
+        shell.place(x=30, y=28)
+        shell.grid_propagate(False)
+        shell.grid_columnconfigure(0, weight=1)
+        shell.grid_rowconfigure(1, weight=1)
 
-        ctk.CTkLabel(
-            header,
-            text="",
-            image=self.assets.mario,
-        ).pack(side="left", padx=(22, 8), pady=12)
+        self.drawHeader(shell)
 
-        headerText = ctk.CTkFrame(header, fg_color="transparent")
-        headerText.pack(side="left", pady=18)
+        body = ctk.CTkFrame(shell, corner_radius=0, fg_color=self.BG)
+        body.grid(row=1, column=0, sticky="nsew", padx=14, pady=(10, 0))
 
-        ctk.CTkLabel(
-            headerText,
-            text="TOAD HOUSE",
-            font=("Arial Black", 27, "bold"),
-            text_color="#FFFFFF",
-        ).pack(anchor="w")
-
-        ctk.CTkLabel(
-            headerText,
-            text="Your in-level adventure companion",
-            text_color="#FEE2E2",
-        ).pack(anchor="w")
-
-        balance = ctk.CTkFrame(header, fg_color="#B91C1C")
-        balance.pack(side="right", padx=20, pady=22)
-
-        ctk.CTkLabel(
-            balance,
-            text="",
-            image=self.assets.coin,
-        ).pack(side="left", padx=(10, 2), pady=5)
-
-        ctk.CTkLabel(
-            balance,
-            textvariable=self.coinText,
-            text_color="#FDE047",
-            font=("Arial", 17, "bold"),
-        ).pack(side="left", padx=(2, 12))
+        sidebar = ctk.CTkFrame(
+            body,
+            width=178,
+            corner_radius=0,
+            fg_color=self.PANEL,
+            border_width=2,
+            border_color=self.BORDER,
+        )
+        sidebar.pack(side="left", fill="y")
+        sidebar.pack_propagate(False)
+        self.drawSidebar(sidebar)
 
         content = ctk.CTkFrame(
-            self.window,
-            fg_color="#F7C873",
+            body,
             corner_radius=0,
+            fg_color=self.PANEL,
+            border_width=2,
+            border_color=self.BORDER,
         )
-        content.pack(fill="both", expand=True)
+        content.pack(side="left", fill="both", expand=True, padx=(12, 0))
 
-        tabs = ctk.CTkTabview(
-            content,
-            fg_color="#FFF3C4",
-            segmented_button_selected_color="#E52521",
-            segmented_button_selected_hover_color="#C41E1A",
-            text_color="#1F2937",
-        )
-        tabs.pack(fill="both", expand=True, padx=18, pady=14)
+        for name in ("SHOP", "BAG", "QUESTS"):
+            frame = ctk.CTkFrame(content, corner_radius=0, fg_color=self.PANEL)
+            frame.place(relx=0, rely=0, relwidth=1, relheight=1)
+            self.sections[name] = frame
 
-        shopTab = tabs.add("SHOP")
-        inventoryTab = tabs.add("INVENTORY")
-        questsTab = tabs.add("QUESTS")
+        self.drawShopSection(self.sections["SHOP"])
+        self.drawInventorySection(self.sections["BAG"])
+        self.drawQuestSection(self.sections["QUESTS"])
+        self.drawStatusBar(shell)
 
-        self.drawShopTab(shopTab)
-        self.drawInventoryTab(inventoryTab)
-        self.drawQuestsTab(questsTab)
-
-        footer = ctk.CTkFrame(
-            content,
-            fg_color="#8B4513",
+    def drawHeader(self, parent):
+        header = ctk.CTkFrame(
+            parent,
+            height=86,
             corner_radius=0,
+            fg_color=self.RED,
+            border_width=0,
         )
-        footer.pack(fill="x")
+        header.grid(row=0, column=0, sticky="ew", padx=4, pady=4)
+        header.grid_propagate(False)
 
-        ctk.CTkLabel(
-            footer,
-            textvariable=self.statusText,
-            text_color="#FFF7D6",
-            font=("Arial", 12, "bold"),
-        ).pack(side="left", padx=16, pady=13)
+        ctk.CTkLabel(header, text="", image=self.assets.mario).pack(
+            side="left", padx=(18, 8), pady=8
+        )
 
-        ctk.CTkButton(
-            footer,
-            text="CONTINUE LEVEL",
-            command=self.closeShop,
-            width=170,
-            height=34,
-            fg_color="#16A34A",
-            hover_color="#15803D",
-            font=("Arial", 12, "bold"),
-        ).pack(side="right", padx=14, pady=8)
+        title = ctk.CTkFrame(header, fg_color="transparent")
+        title.pack(side="left", pady=12)
+        self.pixelLabel(
+            title,
+            text="TOAD HOUSE",
+            text_color="#FFFFFF",
+            font=(self.FONT, 28, "bold"),
+        ).pack(anchor="w")
+        self.pixelLabel(
+            title,
+            text="PIXEL SUPPLY STATION",
+            text_color="#FECACA",
+            font=(self.FONT, 11, "bold"),
+        ).pack(anchor="w")
 
-    def drawShopTab(self, tab):
-        tab.configure(fg_color="#FFF3C4")
+        balance = ctk.CTkFrame(
+            header,
+            corner_radius=0,
+            fg_color="#991B1B",
+            border_width=2,
+            border_color="#FCA5A5",
+        )
+        balance.pack(side="right", padx=18, pady=17)
+        ctk.CTkLabel(balance, text="", image=self.assets.coin).pack(
+            side="left", padx=(8, 2), pady=3
+        )
+        self.pixelLabel(
+            balance,
+            textvariable=self.coinText,
+            text_color=self.YELLOW,
+            font=(self.FONT, 17, "bold"),
+        ).pack(side="left", padx=(2, 12))
 
-        items = [
-            ("MUSHROOM", "Store a growth power-up in your bag.", 5, "#E52521", self.mario.buyMushroom),
-            ("STAR SHIELD", "Store 10 seconds of enemy immunity.", 8, "#2563EB", self.mario.buyShield),
-            ("SUPER JUMP", "Store an emergency vertical launch.", 3, "#16A34A", self.mario.buySuperJump),
-            ("ENEMY CLEANER", "Store a nearby enemy remover.", 10, "#7C3AED", self.mario.buyEnemyCleaner),
-        ]
+    def drawSidebar(self, parent):
+        self.pixelLabel(
+            parent,
+            text="MENU",
+            text_color=self.YELLOW,
+            font=(self.FONT, 15, "bold"),
+        ).pack(anchor="w", padx=16, pady=(18, 10))
 
-        itemGrid = ctk.CTkFrame(tab, fg_color="transparent")
-        itemGrid.pack(fill="x", padx=8, pady=(10, 4))
-
-        for index, item in enumerate(items):
-            self.drawShopItem(
-                itemGrid,
-                index // 2,
-                index % 2,
-                item[0],
-                item[1],
-                item[2],
-                item[3],
-                item[4],
+        for index, name in enumerate(("SHOP", "BAG", "QUESTS"), start=1):
+            button = ctk.CTkButton(
+                parent,
+                text=str(index) + "  " + name,
+                command=lambda section=name: self.showSection(section),
+                height=42,
+                corner_radius=0,
+                border_width=2,
+                border_color=self.BORDER,
+                fg_color=self.DISABLED,
+                hover_color="#4B5563",
+                anchor="w",
+                font=(self.FONT, 13, "bold"),
             )
+            button.pack(fill="x", padx=12, pady=5)
+            self.navButtons[name] = button
+
+        tip = ctk.CTkFrame(
+            parent,
+            corner_radius=0,
+            fg_color=self.BG,
+            border_width=2,
+            border_color="#374151",
+        )
+        tip.pack(side="bottom", fill="x", padx=12, pady=12)
+        self.pixelLabel(
+            tip,
+            text="QUICK KEYS",
+            text_color=self.YELLOW,
+            font=(self.FONT, 11, "bold"),
+        ).pack(anchor="w", padx=10, pady=(10, 3))
+        self.pixelLabel(
+            tip,
+            text="1 / 2 / 3  SWITCH\nB or ESC   CLOSE",
+            text_color=self.MUTED,
+            font=(self.FONT, 10, "bold"),
+            justify="left",
+        ).pack(anchor="w", padx=10, pady=(0, 10))
+
+    def drawSectionTitle(self, parent, title, subtitle):
+        self.pixelLabel(
+            parent,
+            text=title,
+            text_color=self.TEXT,
+            font=(self.FONT, 20, "bold"),
+        ).pack(anchor="w", padx=18, pady=(16, 2))
+        self.pixelLabel(
+            parent,
+            text=subtitle,
+            text_color=self.MUTED,
+            font=(self.FONT, 11, "bold"),
+        ).pack(anchor="w", padx=18, pady=(0, 10))
+
+    def drawShopSection(self, parent):
+        self.drawSectionTitle(
+            parent,
+            "SUPPLY SHELF",
+            "Buy now, activate later from your bag.",
+        )
+
+        grid = ctk.CTkFrame(parent, height=188, fg_color="transparent")
+        grid.pack(fill="x", padx=12)
+        grid.pack_propagate(False)
+        grid.grid_columnconfigure((0, 1), weight=1)
+        grid.grid_rowconfigure((0, 1), weight=1)
+
+        for index, item in enumerate(self.items):
+            self.drawItemCard(grid, index // 2, index % 2, item)
 
         checkpoint = ctk.CTkFrame(
-            tab,
-            fg_color="#8B4513",
+            parent,
+            height=62,
+            corner_radius=0,
+            fg_color="#173C2A",
             border_width=3,
-            border_color="#5B2C06",
+            border_color=self.GREEN,
         )
-        checkpoint.pack(fill="x", padx=15, pady=8)
-
+        checkpoint.pack(fill="x", padx=18, pady=(8, 14))
+        checkpoint.pack_propagate(False)
         ctk.CTkLabel(
             checkpoint,
+            text="",
+            image=self.assets.itemIcons["Checkpoint"],
+        ).pack(side="left", padx=(10, 3))
+
+        info = ctk.CTkFrame(checkpoint, fg_color="transparent")
+        info.pack(side="left", fill="y", pady=5)
+        self.pixelLabel(
+            info,
             text="CHECKPOINT PIPE",
-            text_color="#FDE047",
-            font=("Arial", 14, "bold"),
-        ).pack(side="left", padx=15, pady=14)
-
-        ctk.CTkLabel(
-            checkpoint,
+            text_color="#BBF7D0",
+            font=(self.FONT, 13, "bold"),
+        ).pack(anchor="w")
+        self.pixelLabel(
+            info,
             textvariable=self.checkpointText,
-            text_color="#FFF7D6",
-        ).pack(side="left", padx=8)
+            text_color="#86EFAC",
+            font=(self.FONT, 10, "bold"),
+        ).pack(anchor="w")
 
-        ctk.CTkButton(
+        self.checkpointButton = ctk.CTkButton(
             checkpoint,
-            text="BUY  6 COINS",
+            text="SAVE HERE  |  6 COINS",
             command=lambda: self.runAction(self.mario.buyCheckpoint),
-            fg_color="#16A34A",
-            hover_color="#15803D",
-            width=120,
-        ).pack(side="right", padx=14)
+            width=185,
+            height=32,
+            corner_radius=0,
+            border_width=2,
+            border_color="#86EFAC",
+            fg_color=self.GREEN,
+            hover_color=self.GREEN_HOVER,
+            font=(self.FONT, 11, "bold"),
+        )
+        self.checkpointButton.pack(side="right", padx=12)
 
-    def drawShopItem(self, parent, row, column, name, description, price, color, command):
+    def drawItemCard(self, parent, row, column, item):
         card = ctk.CTkFrame(
             parent,
-            width=375,
-            height=132,
-            fg_color="#FFFFFF",
+            height=88,
+            corner_radius=0,
+            fg_color=self.PANEL_ALT,
             border_width=3,
-            border_color="#8B4513",
+            border_color=item["color"],
         )
-        card.grid(row=row, column=column, padx=6, pady=6)
-        card.grid_propagate(False)
+        card.grid(row=row, column=column, sticky="nsew", padx=6, pady=6)
+        card.pack_propagate(False)
 
-        ctk.CTkLabel(
+        iconBox = ctk.CTkFrame(
             card,
+            width=66,
+            corner_radius=0,
+            fg_color=self.BG,
+            border_width=2,
+            border_color=item["color"],
+        )
+        iconBox.pack(side="left", fill="y", padx=7, pady=7)
+        iconBox.pack_propagate(False)
+        ctk.CTkLabel(
+            iconBox,
             text="",
-            image=self.assets.mushroom,
-        ).pack(side="left", padx=(12, 5))
+            image=self.assets.itemIcons[item["name"]],
+        ).pack(expand=True)
 
         info = ctk.CTkFrame(card, fg_color="transparent")
-        info.pack(side="left", fill="both", expand=True, padx=4, pady=11)
-
-        ctk.CTkLabel(
+        info.pack(side="left", fill="both", expand=True, padx=(0, 7), pady=7)
+        self.pixelLabel(
             info,
-            text=name,
-            text_color="#7C2D12",
-            font=("Arial", 13, "bold"),
+            text=item["title"],
+            text_color=self.TEXT,
+            font=(self.FONT, 13, "bold"),
         ).pack(anchor="w")
-
-        ctk.CTkLabel(
+        self.pixelLabel(
             info,
-            text=description,
-            text_color="#4B5563",
+            text=item["description"],
+            text_color=self.MUTED,
+            font=(self.FONT, 10, "bold"),
+            wraplength=200,
             justify="left",
-            wraplength=190,
-        ).pack(anchor="w", pady=(2, 6))
+        ).pack(anchor="w", pady=(1, 4))
 
-        ctk.CTkButton(
+        button = ctk.CTkButton(
             info,
-            text="BUY  " + str(price),
-            command=lambda: self.runAction(command),
-            width=92,
-            height=26,
-            fg_color=color,
-            hover_color=color,
-            font=("Arial", 11, "bold"),
-        ).pack(anchor="w")
+            text="BUY  " + str(item["price"]) + " COINS",
+            command=lambda action=item["command"]: self.runAction(action),
+            height=25,
+            corner_radius=0,
+            border_width=2,
+            border_color=item["color"],
+            fg_color=item["color"],
+            hover_color=item["color"],
+            font=(self.FONT, 10, "bold"),
+        )
+        button.pack(anchor="w", fill="x")
+        self.buyButtons[item["name"]] = (button, item)
 
-    def drawInventoryTab(self, tab):
-        tab.configure(fg_color="#FFF3C4")
+    def drawInventorySection(self, parent):
+        self.drawSectionTitle(
+            parent,
+            "ITEM BAG",
+            "Items stay here until you choose to activate them.",
+        )
 
-        ctk.CTkLabel(
-            tab,
-            text="ITEM BAG",
-            text_color="#7C2D12",
-            font=("Arial Black", 19, "bold"),
-        ).pack(anchor="w", padx=18, pady=(18, 2))
-
-        ctk.CTkLabel(
-            tab,
-            text="Purchased items wait here until you activate them.",
-            text_color="#4B5563",
-        ).pack(anchor="w", padx=18, pady=(0, 12))
-
-        items = [
-            ("Mushroom", self.mario.useMushroom),
-            ("Star Shield", self.mario.useShield),
-            ("Super Jump", self.mario.useSuperJump),
-            ("Enemy Cleaner", self.mario.useEnemyCleaner),
-        ]
-
-        for itemName, command in items:
+        for item in self.items:
             row = ctk.CTkFrame(
-                tab,
-                fg_color="#FFFFFF",
+                parent,
+                height=78,
+                corner_radius=0,
+                fg_color=self.PANEL_ALT,
                 border_width=2,
-                border_color="#D97706",
+                border_color=item["color"],
             )
-            row.pack(fill="x", padx=18, pady=5)
-
+            row.pack(fill="x", padx=18, pady=6)
+            row.pack_propagate(False)
             ctk.CTkLabel(
                 row,
-                text=itemName.upper(),
-                text_color="#7C2D12",
-                font=("Arial", 13, "bold"),
-                width=180,
+                text="",
+                image=self.assets.itemIcons[item["name"]],
+            ).pack(side="left", padx=(12, 8))
+
+            self.pixelLabel(
+                row,
+                text=item["title"],
+                text_color=self.TEXT,
+                width=190,
                 anchor="w",
-            ).pack(side="left", padx=12, pady=11)
-
-            amountText = tk.StringVar(self.window)
-            self.inventoryLabels[itemName] = amountText
-            ctk.CTkLabel(
-                row,
-                textvariable=amountText,
-                text_color="#4B5563",
-                width=80,
+                font=(self.FONT, 12, "bold"),
             ).pack(side="left")
 
-            ctk.CTkButton(
+            amount = tk.StringVar(self.window)
+            self.inventoryLabels[item["name"]] = amount
+            self.pixelLabel(
+                row,
+                textvariable=amount,
+                text_color=self.YELLOW,
+                width=70,
+                font=(self.FONT, 13, "bold"),
+            ).pack(side="left")
+
+            useCommand = {
+                "Mushroom": self.mario.useMushroom,
+                "Star Shield": self.mario.useShield,
+                "Super Jump": self.mario.useSuperJump,
+                "Enemy Cleaner": self.mario.useEnemyCleaner,
+            }[item["name"]]
+            button = ctk.CTkButton(
                 row,
                 text="USE ITEM",
-                command=lambda action=command: self.runAction(action),
-                width=110,
-                height=28,
-                fg_color="#16A34A",
-                hover_color="#15803D",
-            ).pack(side="right", padx=12)
+                command=lambda action=useCommand: self.runAction(action),
+                width=125,
+                height=34,
+                corner_radius=0,
+                border_width=2,
+                border_color=item["color"],
+                fg_color=item["color"],
+                hover_color=item["color"],
+                font=(self.FONT, 10, "bold"),
+            )
+            button.pack(side="right", padx=12)
+            self.inventoryButtons[item["name"]] = button
 
-    def drawQuestsTab(self, tab):
-        tab.configure(fg_color="#FFF3C4")
-
-        ctk.CTkLabel(
-            tab,
-            text="TOAD MISSIONS",
-            text_color="#7C2D12",
-            font=("Arial Black", 19, "bold"),
-        ).pack(anchor="w", padx=18, pady=(18, 2))
-
-        ctk.CTkLabel(
-            tab,
-            text="Complete optional goals to earn bonus shop coins.",
-            text_color="#4B5563",
-        ).pack(anchor="w", padx=18, pady=(0, 12))
+    def drawQuestSection(self, parent):
+        self.drawSectionTitle(
+            parent,
+            "TOAD MISSIONS",
+            "Optional goals pay bonus coins automatically.",
+        )
 
         for quest in self.mario.quests.getQuests():
             card = ctk.CTkFrame(
-                tab,
-                fg_color="#FFFFFF",
+                parent,
+                height=105,
+                corner_radius=0,
+                fg_color=self.PANEL_ALT,
                 border_width=2,
                 border_color="#D97706",
             )
-            card.pack(fill="x", padx=18, pady=6)
-
-            ctk.CTkLabel(
+            card.pack(fill="x", padx=18, pady=5)
+            card.pack_propagate(False)
+            self.pixelLabel(
                 card,
                 text=quest.title.upper(),
-                text_color="#7C2D12",
-                font=("Arial", 13, "bold"),
-            ).pack(anchor="w", padx=14, pady=(10, 1))
-
-            ctk.CTkLabel(
+                text_color=self.YELLOW,
+                font=(self.FONT, 13, "bold"),
+            ).pack(anchor="w", padx=14, pady=(8, 1))
+            self.pixelLabel(
                 card,
-                text=quest.description + "  Reward: " + str(quest.reward) + " coins",
-                text_color="#4B5563",
+                text=quest.description + "  REWARD: +" + str(quest.reward),
+                text_color=self.MUTED,
+                font=(self.FONT, 10, "bold"),
             ).pack(anchor="w", padx=14)
+
+            progress = ctk.CTkProgressBar(
+                card,
+                height=12,
+                corner_radius=0,
+                fg_color=self.BG,
+                progress_color=self.GREEN,
+                border_width=1,
+                border_color=self.BORDER,
+            )
+            progress.pack(fill="x", padx=14, pady=(5, 2))
+            self.questBars[quest.title] = progress
 
             progressText = tk.StringVar(self.window)
             self.questLabels[quest.title] = progressText
-            ctk.CTkLabel(
+            self.pixelLabel(
                 card,
                 textvariable=progressText,
-                text_color="#16A34A",
-                font=("Arial", 12, "bold"),
-            ).pack(anchor="w", padx=14, pady=(2, 9))
+                text_color="#86EFAC",
+                font=(self.FONT, 10, "bold"),
+            ).pack(anchor="e", padx=14, pady=(0, 6))
+
+    def drawStatusBar(self, parent):
+        footer = ctk.CTkFrame(
+            parent,
+            height=58,
+            corner_radius=0,
+            fg_color=self.BG,
+            border_width=0,
+        )
+        footer.grid(row=2, column=0, sticky="ew", padx=14, pady=(8, 12))
+        footer.grid_propagate(False)
+
+        self.statusPanel = ctk.CTkFrame(
+            footer,
+            corner_radius=0,
+            fg_color=self.PANEL,
+            border_width=2,
+            border_color=self.BORDER,
+        )
+        self.statusPanel.pack(side="left", fill="both", expand=True)
+        self.statusLabel = self.pixelLabel(
+            self.statusPanel,
+            textvariable=self.statusText,
+            text_color=self.TEXT,
+            font=(self.FONT, 10, "bold"),
+            anchor="w",
+        )
+        self.statusLabel.pack(fill="both", expand=True, padx=12)
+
+        ctk.CTkButton(
+            footer,
+            text="CONTINUE LEVEL  [B]",
+            command=self.closeShop,
+            width=200,
+            height=42,
+            corner_radius=0,
+            border_width=2,
+            border_color="#86EFAC",
+            fg_color=self.GREEN,
+            hover_color=self.GREEN_HOVER,
+            font=(self.FONT, 11, "bold"),
+        ).pack(side="right", padx=(10, 0), pady=7)
+
+    def showSection(self, section):
+        self.activeSection = section
+        self.sections[section].lift()
+
+        for name, button in self.navButtons.items():
+            if name == section:
+                button.configure(
+                    fg_color=self.RED,
+                    hover_color=self.RED_HOVER,
+                    border_color="#FCA5A5",
+                )
+            else:
+                button.configure(
+                    fg_color=self.DISABLED,
+                    hover_color="#4B5563",
+                    border_color=self.BORDER,
+                )
 
     def runAction(self, command):
-        self.statusText.set(command())
+        message = command()
+        self.statusText.set(message)
+
+        failure = (
+            message.startswith("Not enough")
+            or message.startswith("You do not")
+            or message.startswith("Cannot")
+        )
+        if failure:
+            self.statusPanel.configure(border_color="#EF4444")
+            self.statusLabel.configure(text_color="#FCA5A5")
+        else:
+            self.statusPanel.configure(border_color=self.GREEN)
+            self.statusLabel.configure(text_color="#86EFAC")
+
         self.refresh()
 
     def refresh(self):
-        self.coinText.set(str(self.mario.dashboard.coins) + " COINS")
+        coins = self.mario.dashboard.coins
+        self.coinText.set(str(coins).zfill(2) + " COINS")
         self.checkpointText.set("STATUS: " + self.mario.checkpoints.getStatus())
 
         for itemName, label in self.inventoryLabels.items():
-            label.set("x" + str(self.mario.inventory.getAmount(itemName)))
+            amount = self.mario.inventory.getAmount(itemName)
+            label.set("x" + str(amount))
+            state = "normal" if amount > 0 else "disabled"
+            self.inventoryButtons[itemName].configure(state=state)
+
+        for itemName, buttonData in self.buyButtons.items():
+            button, item = buttonData
+            state = "normal" if coins >= item["price"] else "disabled"
+            button.configure(state=state)
+
+        checkpointState = "normal" if coins >= 6 else "disabled"
+        self.checkpointButton.configure(state=checkpointState)
 
         for quest in self.mario.quests.getQuests():
-            label = self.questLabels[quest.title]
-
+            progress = min(1, quest.progress / quest.target)
+            self.questBars[quest.title].set(progress)
             if quest.completed:
-                label.set("COMPLETED")
+                self.questLabels[quest.title].set("COMPLETE  +" + str(quest.reward) + " COINS")
             else:
-                label.set(str(quest.progress) + " / " + str(quest.target))
+                self.questLabels[quest.title].set(
+                    str(quest.progress) + " / " + str(quest.target)
+                )
 
-    def closeShop(self):
+    def closeShop(self, event=None):
         self.window.destroy()
 
     def open(self):
